@@ -44,3 +44,26 @@ def get_project(
 
     with open(path,"r") as f:
         return json.load(f)
+    
+def update_project(
+    project_id,
+    updates
+):
+
+    data = get_project(project_id)
+
+
+    if not data:
+        return None
+
+
+    data.update(updates)
+
+
+    save_project(
+        project_id,
+        data
+    )
+
+
+    return data
