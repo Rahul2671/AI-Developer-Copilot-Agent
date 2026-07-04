@@ -29,3 +29,7 @@ def read_code_files(folder_path):
                     continue
 
     return files_data
+def list_files(project_id, upload_path="data/projects"):
+    extracted_folder = f"{upload_path}/{project_id}/extracted"
+    files_data = read_code_files(extracted_folder)
+    return [f["path"] for f in files_data]

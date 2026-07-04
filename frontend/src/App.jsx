@@ -2,6 +2,8 @@ import {useState} from "react";
 import Upload from "./components/Upload";
 import Chat from "./components/Chat";
 import HealthReport from "./components/HealthReport";
+import ReviewCode from "./components/ReviewCode";
+import AskBeforeCode from "./components/AskBeforeCode";
 import "./App.css";
 
 function App() {
@@ -32,6 +34,16 @@ function App() {
       <div className="card">
         <p className="card-label">Step 03</p>
         <HealthReport projectId={projectId} />
+      </div>
+
+      <div className="card">
+        <p className="card-label">Step 04</p>
+        <ReviewCode projectId={projectId} />
+      </div>
+
+      <div className="card">
+        <p className="card-label">Step 05</p>
+        <AskBeforeCode projectId={projectId} />
       </div>
     </div>
   )

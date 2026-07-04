@@ -4,6 +4,8 @@ from api.upload import router as upload_router
 from api.chat import router as chat_router
 from api.project import router as project_router
 from api.health import router as health_router
+from api.review import router as review_router
+from api.plan import router as plan_router
 
 app = FastAPI(
     title="AI Developer Copilot"
@@ -39,6 +41,16 @@ app.include_router(
     health_router,
     prefix="/health",
     tags=["Health"]
+)
+app.include_router(
+    review_router,
+    prefix="/review",
+    tags=["Review"]
+)
+app.include_router(
+    plan_router,
+    prefix="/plan",
+    tags=["Plan"]
 )
 
 @app.get("/")
