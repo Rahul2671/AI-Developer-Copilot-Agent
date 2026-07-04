@@ -236,3 +236,6 @@ frontend/.env
 # Logs
 *.log
 AI-Developer-Copilot-Agent/
+
+data/projects/
+data/vectorstore/

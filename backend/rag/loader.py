@@ -13,22 +13,50 @@ def extract_repo(project_id, upload_path="data/projects"):
 
 
 def read_code_files(folder_path):
-    code_extensions = (".py", ".js", ".jsx", ".ts", ".tsx", ".java", ".cpp")
+    code_extensions = (
+        ".py", ".js", ".jsx", ".ts", ".tsx",
+        ".java", ".cpp", ".cc", ".c", ".h", ".hpp",
+        ".cs", ".go", ".rs", ".php", ".rb", ".swift",
+        ".kt", ".kts", ".m", ".mm", ".scala",
+        ".sql", ".html", ".css", ".scss",
+        ".json", ".xml", ".yaml", ".yml",
+        ".sh", ".bat", ".ps1"
+    )
+
     files_data = []
 
     for root, dirs, files in os.walk(folder_path):
-        dirs[:] = [d for d in dirs if d not in ("node_modules", ".git", "__pycache__", "venv")]
+        dirs[:] = [
+            d for d in dirs
+            if d not in (
+                "node_modules",
+                ".git",
+                "__pycache__",
+                "venv",
+                ".venv",
+                "dist",
+                "build"
+            )
+        ]
+
         for file in files:
-            if file.endswith(code_extensions):
+            if file.lower().endswith(code_extensions):
                 full_path = os.path.join(root, file)
+
                 try:
                     with open(full_path, "r", encoding="utf-8", errors="ignore") as f:
                         content = f.read()
-                    files_data.append({"path": full_path, "content": content})
+
+                    files_data.append({
+                        "path": full_path,
+                        "content": content
+                    })
+
                 except Exception:
                     continue
 
     return files_data
+
 def list_files(project_id, upload_path="data/projects"):
     extracted_folder = f"{upload_path}/{project_id}/extracted"
     files_data = read_code_files(extracted_folder)

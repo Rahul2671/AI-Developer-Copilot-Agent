@@ -9,6 +9,11 @@ def get_collection(project_id):
 
 def add_chunks(project_id, chunks):
     collection = get_collection(project_id)
+
+    if not chunks:
+        raise ValueError(
+            "No supported source code files were found in the uploaded repository."
+        )
     collection.add(
         ids=[c["id"] for c in chunks],
         documents=[c["text"] for c in chunks],
