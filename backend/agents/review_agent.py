@@ -8,7 +8,7 @@ client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 def review_file(project_id, file_path):
     if not os.path.isabs(file_path):
-        full_path = os.path.join(
+        file_path = os.path.join(
             "data",
             "projects",
             project_id,
@@ -16,9 +16,9 @@ def review_file(project_id, file_path):
             file_path
         )
     try:
-        print(full_path)
-        print(os.path.exists(full_path))
-        with open(full_path, "r", encoding="utf-8", errors="ignore") as f:
+        print(file_path)
+        print(os.path.exists(file_path))
+        with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
             content = f.read()
     except FileNotFoundError:
         return {"error": "File not found"}
