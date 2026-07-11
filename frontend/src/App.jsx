@@ -6,6 +6,8 @@ import ReviewCode from "./components/ReviewCode";
 import AskBeforeCode from "./components/AskBeforeCode";
 import CodeSearch from "./components/CodeSearch";
 import ExplainFile from "./components/ExplainFile";
+import ArchitectureSummary from "./components/ArchitectureSummary";
+import FolderExplain from "./components/FolderExplain";
 import "./App.css";
 
 function App() {
@@ -56,6 +58,15 @@ function App() {
       <div className="card">
         <p className="card-label">Step 07</p>
         <AskBeforeCode projectId={projectId} />
+      </div>
+      <div className="card">
+        <p className="card-label">Step 08</p>
+        <ArchitectureSummary projectId={projectId} />
+      </div>
+
+      <div className="card">
+        <p className="card-label">Step 09</p>
+        <FolderExplain projectId={projectId} />
       </div>
     </div>
   )

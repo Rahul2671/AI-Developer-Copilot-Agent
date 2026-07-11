@@ -23,6 +23,13 @@ def read_code_files(folder_path):
         ".sh", ".bat", ".ps1"
     )
 
+    # Manifest files with no/unusual extension that dependency analysis needs
+    # (e.g. requirements.txt has no code extension, so it's matched by exact name instead)
+    manifest_filenames = (
+        "requirements.txt", "pipfile", "pyproject.toml",
+        "dockerfile", "docker-compose.yml", "docker-compose.yaml",
+    )
+
     files_data = []
 
     for root, dirs, files in os.walk(folder_path):
@@ -40,10 +47,11 @@ def read_code_files(folder_path):
         ]
 
         for file in files:
-            if file.lower().endswith(code_extensions):
+            is_code_file = file.lower().endswith(code_extensions)
+            is_manifest_file = file.lower() in manifest_filenames
+
+            if is_code_file or is_manifest_file:
                 full_path = os.path.join(root, file)
-                # Store a clean relative path (e.g. "backend/auth.py") instead of
-                # the full extracted-folder path -- makes citations/search results readable.
                 relative_path = os.path.relpath(full_path, folder_path)
 
                 try:

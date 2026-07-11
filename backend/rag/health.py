@@ -1,5 +1,9 @@
 import os
 import re
+from rag.architecture import (
+    build_tech_stack, build_folder_summary, detect_entry_points,
+    analyze_dependencies, detect_unused_imports, detect_circular_imports,
+)
 
 TECH_STACK_MAP = {
     ".py": "Python",
@@ -50,5 +54,12 @@ def analyze_project(files_data):
         "has_tests": has_tests,
         "missing_tests_warning": None if has_tests else "No test files detected in this project",
         "security_warnings": security_warnings,
-        "security_issue_count": len(security_warnings)
+        "security_issue_count": len(security_warnings),
+
+        "tech_stack_detailed": build_tech_stack(files_data),
+        "dependencies": analyze_dependencies(files_data),
+        "unused_imports": detect_unused_imports(files_data),
+        "circular_imports": detect_circular_imports(files_data),
+        "folder_summary": build_folder_summary(files_data),
+        "entry_points": detect_entry_points(files_data),
     }

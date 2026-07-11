@@ -67,3 +67,32 @@ export const explainFile = async(data)=>{
 
     return res.data;
 }
+export const getArchitectureSummary = async(projectId)=>{
+
+    const res = await API.get(
+        `/architecture/summary/${projectId}`
+    );
+
+    return res.data;
+}
+
+
+export const listFolders = async(projectId)=>{
+
+    const res = await API.get(
+        `/architecture/folders/${projectId}`
+    );
+
+    return res.data;
+}
+
+
+export const explainFolder = async(data)=>{
+
+    const res = await API.post(
+        "/architecture/folder",
+        data
+    );
+
+    return res.data;
+}

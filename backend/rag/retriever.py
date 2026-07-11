@@ -93,6 +93,15 @@ def get_indexed_files(project_id):
     return list_indexed_files(project_id)
 
 
+def get_project_files(project_id, upload_path="data/projects"):
+    """
+    Raw file list straight from disk (path + content), same source health checks use.
+    Used by architecture summary / folder explanation -- doesn't require vector indexing.
+    """
+    extracted_folder = f"{upload_path}/{project_id}/extracted"
+    return read_code_files(extracted_folder)
+
+
 from rag.health import analyze_project
 
 def get_health_report(project_id, upload_path="data/projects"):

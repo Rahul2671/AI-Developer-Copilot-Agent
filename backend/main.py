@@ -1,3 +1,4 @@
+from api.architecture import router as architecture_router
 from api.search import router as search_router
 from api.explain import router as explain_router
 from fastapi import FastAPI
@@ -63,6 +64,11 @@ app.include_router(
     explain_router,
     prefix="/explain",
     tags=["Explain"]
+)
+app.include_router(
+    architecture_router,
+    prefix="/architecture",
+    tags=["Architecture"]
 )
 
 @app.get("/")

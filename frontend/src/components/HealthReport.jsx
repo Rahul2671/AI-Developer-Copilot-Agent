@@ -50,6 +50,52 @@ report.security_warnings.map((w, i) => (
 <p className="answer-text" key={i}>⚠ {w.file}: {w.issue}</p>
 ))
 )}
+
+{report.dependencies && (
+<>
+<p className="answer-label" style={{marginTop:"20px"}}>Dependencies</p>
+<p className="answer-text">
+Python: {report.dependencies.python_packages.join(", ") || "None"}
+</p>
+<p className="answer-text">
+npm: {report.dependencies.npm_packages.join(", ") || "None"}
+</p>
+{report.dependencies.heavy_dependencies.length > 0 && (
+<p className="answer-text">
+⚠ Heavy dependencies: {report.dependencies.heavy_dependencies.join(", ")}
+</p>
+)}
+</>
+)}
+
+{report.unused_imports && report.unused_imports.length > 0 && (
+<>
+<p className="answer-label" style={{marginTop:"20px"}}>
+Unused Imports ({report.unused_imports.length})
+</p>
+{report.unused_imports.map((u, i) => (
+<p className="answer-text" key={i}>⚠ {u.file}: {u.unused_import}</p>
+))}
+</>
+)}
+
+{report.circular_imports && report.circular_imports.length > 0 && (
+<>
+<p className="answer-label" style={{marginTop:"20px"}}>
+Circular Imports ({report.circular_imports.length})
+</p>
+{report.circular_imports.map((cycle, i) => (
+<p className="answer-text" key={i}>⚠ {cycle.join(" → ")}</p>
+))}
+</>
+)}
+
+{report.entry_points && report.entry_points.length > 0 && (
+<>
+<p className="answer-label" style={{marginTop:"20px"}}>Entry Points</p>
+<p className="answer-text">{report.entry_points.join(", ")}</p>
+</>
+)}
 </div>
 )}
 </div>

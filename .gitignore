@@ -239,3 +239,4 @@ AI-Developer-Copilot-Agent/
 
 data/projects/
 data/vectorstore/
+.DS_Store
