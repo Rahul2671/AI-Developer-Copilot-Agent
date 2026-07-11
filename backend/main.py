@@ -9,6 +9,8 @@ from api.project import router as project_router
 from api.health import router as health_router
 from api.review import router as review_router
 from api.plan import router as plan_router
+from api.memory import router as memory_router
+from api.tool_chat import router as tool_chat_router
 
 app = FastAPI(
     title="AI Developer Copilot"
@@ -69,6 +71,16 @@ app.include_router(
     architecture_router,
     prefix="/architecture",
     tags=["Architecture"]
+)
+app.include_router(
+    memory_router,
+    prefix="/memory",
+    tags=["Memory"]
+)
+app.include_router(
+    tool_chat_router,
+    prefix="/tool-chat",
+    tags=["Tool Chat"]
 )
 
 @app.get("/")

@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from groq import Groq
 from rag.retriever import get_relevant_context
+from rag.memory import get_history, append_turn
 
 load_dotenv()
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
@@ -32,6 +33,16 @@ def _dedupe_sources(chunks):
     return sources
 
 
+def _format_history(history):
+    if not history:
+        return ""
+    lines = []
+    for turn in history[-10:]:
+        role = "You" if turn["role"] == "assistant" else "Developer"
+        lines.append(f"{role}: {turn['content']}")
+    return "\n".join(lines)
+
+
 def ask_codebase(project_id, question):
     try:
         chunks = get_relevant_context(project_id, question)
@@ -47,8 +58,12 @@ def ask_codebase(project_id, question):
         labeled_blocks.append(f"### {label}\n{chunk['text']}")
     combined_context = "\n\n".join(labeled_blocks)
 
-    prompt = f"""You are a helpful AI assistant that answers questions about a codebase.
+    history = get_history(project_id)
+    history_text = _format_history(history)
+    history_section = f"\nPrevious conversation about this project:\n{history_text}\n" if history_text else ""
 
+    prompt = f"""You are a helpful AI assistant that answers questions about a codebase.
+{history_section}
 Each snippet below is labeled with its file name, line numbers, and function/class name.
 
 {combined_context}
@@ -56,7 +71,9 @@ Each snippet below is labeled with its file name, line numbers, and function/cla
 Question: {question}
 
 Answer clearly and concisely, referencing the code above. When you refer to a
-specific piece of code, mention which file and function it came from."""
+specific piece of code, mention which file and function it came from. If the
+question refers back to something discussed earlier (e.g. "it", "that function",
+"the one above"), use the previous conversation to understand what's being asked."""
 
     try:
         response = client.chat.completions.create(
@@ -67,6 +84,8 @@ specific piece of code, mention which file and function it came from."""
         answer = response.choices[0].message.content
     except Exception:
         answer = f"[LLM unavailable — showing raw retrieved code]\n\n{combined_context[:800]}"
+
+    append_turn(project_id, question, answer)
 
     sources = _dedupe_sources(chunks)
 

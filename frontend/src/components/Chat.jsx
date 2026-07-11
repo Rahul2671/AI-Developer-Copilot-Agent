@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {askQuestion} from "../api/api";
+import {askQuestion, clearChatMemory} from "../api/api";
 
 function Chat({projectId}){
 const [question,setQuestion]=useState("");
@@ -32,6 +32,20 @@ setLoading(false);
 }
 }
 
+const newConversation=async()=>{
+if(!projectId){
+return;
+}
+try{
+await clearChatMemory(projectId);
+}catch(err){
+console.log(err);
+}
+setQuestion("");
+setAnswer("");
+setSources([]);
+}
+
 return (
 <div>
 <h2>Chat with your code</h2>
@@ -45,6 +59,9 @@ e=>setQuestion(e.target.value)
 <div className="ask-row">
 <button onClick={send} disabled={loading}>
 {loading ? "Thinking..." : "Ask"}
+</button>
+<button onClick={newConversation} disabled={loading} style={{marginLeft:"8px"}}>
+New conversation
 </button>
 </div>
 {answer && (

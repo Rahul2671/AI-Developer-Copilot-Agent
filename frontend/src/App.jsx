@@ -8,6 +8,7 @@ import CodeSearch from "./components/CodeSearch";
 import ExplainFile from "./components/ExplainFile";
 import ArchitectureSummary from "./components/ArchitectureSummary";
 import FolderExplain from "./components/FolderExplain";
+import ToolChat from "./components/ToolChat";
 import "./App.css";
 
 function App() {
@@ -67,6 +68,11 @@ function App() {
       <div className="card">
         <p className="card-label">Step 09</p>
         <FolderExplain projectId={projectId} />
+      </div>
+      
+      <div className="card">
+        <p className="card-label">Step 10</p>
+        <ToolChat projectId={projectId} />
       </div>
     </div>
   )

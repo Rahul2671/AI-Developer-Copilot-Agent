@@ -96,3 +96,22 @@ export const explainFolder = async(data)=>{
 
     return res.data;
 }
+export const clearChatMemory = async(projectId)=>{
+
+    const res = await API.delete(
+        `/memory/${projectId}`
+    );
+
+    return res.data;
+}
+
+
+export const askWithTools = async(data)=>{
+
+    const res = await API.post(
+        "/tool-chat",
+        data
+    );
+
+    return res.data;
+}
