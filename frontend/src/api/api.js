@@ -12,7 +12,7 @@ export const uploadProject = async(file)=>{
     formData.append("file",file);
 
     const res = await API.post(
-        "/upload",
+        "/upload/",
         formData,
         {
             headers:{
