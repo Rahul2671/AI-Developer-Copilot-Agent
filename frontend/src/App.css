@@ -238,3 +238,76 @@ textarea::placeholder {
 @media (prefers-reduced-motion: reduce) {
   .cursor-blink { animation: none; opacity: 1; }
 }
+.sources-block {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--border-line);
+}
+
+.sources-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0 0 10px;
+}
+
+.sources-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.source-item {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--text-muted);
+  background: var(--bg-surface-2);
+  border: 1px solid var(--border-line);
+  border-radius: 6px;
+  padding: 8px 12px;
+}
+
+.source-file {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.source-lines {
+  color: var(--text-muted);
+}
+
+.source-symbol {
+  color: var(--text-primary);
+}
+
+.search-snippet {
+  margin: 8px 0 0;
+  padding: 8px;
+  background: var(--bg-void);
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: pre-wrap;
+  color: var(--text-muted);
+  overflow-x: auto;
+}
+
+select {
+  background: var(--bg-surface-2);
+  border: 1px solid var(--border-line);
+  color: var(--text-primary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  flex: 1;
+}
+
+select:focus {
+  outline: none;
+  border-color: var(--accent);
+}

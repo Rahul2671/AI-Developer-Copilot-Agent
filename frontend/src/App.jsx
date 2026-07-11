@@ -4,6 +4,8 @@ import Chat from "./components/Chat";
 import HealthReport from "./components/HealthReport";
 import ReviewCode from "./components/ReviewCode";
 import AskBeforeCode from "./components/AskBeforeCode";
+import CodeSearch from "./components/CodeSearch";
+import ExplainFile from "./components/ExplainFile";
 import "./App.css";
 
 function App() {
@@ -33,16 +35,26 @@ function App() {
 
       <div className="card">
         <p className="card-label">Step 03</p>
-        <HealthReport projectId={projectId} />
+        <CodeSearch projectId={projectId} />
       </div>
 
       <div className="card">
         <p className="card-label">Step 04</p>
-        <ReviewCode projectId={projectId} />
+        <ExplainFile projectId={projectId} />
       </div>
 
       <div className="card">
         <p className="card-label">Step 05</p>
+        <HealthReport projectId={projectId} />
+      </div>
+
+      <div className="card">
+        <p className="card-label">Step 06</p>
+        <ReviewCode projectId={projectId} />
+      </div>
+
+      <div className="card">
+        <p className="card-label">Step 07</p>
         <AskBeforeCode projectId={projectId} />
       </div>
     </div>

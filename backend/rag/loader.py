@@ -42,13 +42,16 @@ def read_code_files(folder_path):
         for file in files:
             if file.lower().endswith(code_extensions):
                 full_path = os.path.join(root, file)
+                # Store a clean relative path (e.g. "backend/auth.py") instead of
+                # the full extracted-folder path -- makes citations/search results readable.
+                relative_path = os.path.relpath(full_path, folder_path)
 
                 try:
                     with open(full_path, "r", encoding="utf-8", errors="ignore") as f:
                         content = f.read()
 
                     files_data.append({
-                        "path": full_path,
+                        "path": relative_path,
                         "content": content
                     })
 

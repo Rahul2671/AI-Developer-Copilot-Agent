@@ -1,3 +1,5 @@
+from api.search import router as search_router
+from api.explain import router as explain_router
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from api.upload import router as upload_router
@@ -51,6 +53,16 @@ app.include_router(
     plan_router,
     prefix="/plan",
     tags=["Plan"]
+)
+app.include_router(
+    search_router,
+    prefix="/search",
+    tags=["Search"]
+)
+app.include_router(
+    explain_router,
+    prefix="/explain",
+    tags=["Explain"]
 )
 
 @app.get("/")

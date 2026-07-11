@@ -35,3 +35,35 @@ export const askQuestion = async(data)=>{
 
     return res.data;
 }
+
+
+export const searchCodebase = async(data)=>{
+
+    const res = await API.post(
+        "/search",
+        data
+    );
+
+    return res.data;
+}
+
+
+export const listIndexedFiles = async(projectId)=>{
+
+    const res = await API.get(
+        `/search/files/${projectId}`
+    );
+
+    return res.data;
+}
+
+
+export const explainFile = async(data)=>{
+
+    const res = await API.post(
+        "/explain",
+        data
+    );
+
+    return res.data;
+}

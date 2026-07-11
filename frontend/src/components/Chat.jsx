@@ -4,17 +4,32 @@ import {askQuestion} from "../api/api";
 function Chat({projectId}){
 const [question,setQuestion]=useState("");
 const [answer,setAnswer]=useState("");
+const [sources,setSources]=useState([]);
+const [loading,setLoading]=useState(false);
 
 const send=async()=>{
 if(!projectId){
 alert("Please upload a repo first");
 return;
 }
+if(!question.trim()){
+return;
+}
+setLoading(true);
+try{
 const res=await askQuestion({
 project_id: projectId,
-question
+message: question
 });
 setAnswer(res.answer);
+setSources(res.sources || []);
+}catch(err){
+console.log(err);
+setAnswer("Something went wrong asking the codebase. Check the backend logs.");
+setSources([]);
+}finally{
+setLoading(false);
+}
 }
 
 return (
@@ -28,12 +43,31 @@ e=>setQuestion(e.target.value)
 }
 />
 <div className="ask-row">
-<button onClick={send}>Ask</button>
+<button onClick={send} disabled={loading}>
+{loading ? "Thinking..." : "Ask"}
+</button>
 </div>
 {answer && (
 <div className="answer-block">
 <p className="answer-label">Answer</p>
 <p className="answer-text">{answer}</p>
+
+{sources.length > 0 && (
+<div className="sources-block">
+<p className="sources-label">Sources</p>
+<ul className="sources-list">
+{sources.map((s, i) => (
+<li key={i} className="source-item">
+<span className="source-file">{s.file}</span>
+<span className="source-lines"> Lines {s.start_line}-{s.end_line}</span>
+{s.symbol && (
+<span className="source-symbol"> · {s.kind} {s.symbol}</span>
+)}
+</li>
+))}
+</ul>
+</div>
+)}
 </div>
 )}
 </div>
