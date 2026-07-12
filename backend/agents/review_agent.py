@@ -16,6 +16,7 @@ def review_file(project_id, file_path):
             file_path
         )
     try:
+        print("Current working directory:", os.getcwd())
         print("Trying to open:", os.path.abspath(file_path))
         print("Exists:", os.path.exists(file_path))
         with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
