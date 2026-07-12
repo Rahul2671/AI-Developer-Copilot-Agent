@@ -22,4 +22,8 @@ class ReviewRequest(BaseModel):
 
 @router.post("/")
 def review(request: ReviewRequest):
+    print("========== REVIEW ENDPOINT ==========")
+    print("Project ID:", request.project_id)
+    print("File Path:", request.file_path)
+
     return review_file(request.project_id, request.file_path)
