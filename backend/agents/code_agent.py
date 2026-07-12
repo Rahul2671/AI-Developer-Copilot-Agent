@@ -57,33 +57,111 @@ def ask_codebase(project_id, question):
         label = _format_citation(chunk)
         labeled_blocks.append(f"### {label}\n{chunk['text']}")
     combined_context = "\n\n".join(labeled_blocks)
+    if not combined_context.strip():
+        return {
+            "answer": (
+                "I couldn't find enough relevant code to answer this question.\n\n"
+                "Try:\n"
+                "- using more specific function or file names\n"
+                "- asking about a particular feature\n"
+                "- making sure the repository was indexed successfully"
+            ),
+            "sources": []
+        }
 
     history = get_history(project_id)
     history_text = _format_history(history)
     history_section = f"\nPrevious conversation about this project:\n{history_text}\n" if history_text else ""
 
-    prompt = f"""You are a helpful AI assistant that answers questions about a codebase.
+    prompt = f"""
+You are an expert AI Software Engineer and Software Architect.
+
+You are answering questions about an existing software project.
+
 {history_section}
-Each snippet below is labeled with its file name, line numbers, and function/class name.
+
+Relevant repository context:
 
 {combined_context}
 
-Question: {question}
+User Question:
+{question}
 
-Answer clearly and concisely, referencing the code above. When you refer to a
-specific piece of code, mention which file and function it came from. If the
-question refers back to something discussed earlier (e.g. "it", "that function",
-"the one above"), use the previous conversation to understand what's being asked."""
+Instructions:
+
+- Answer ONLY using the provided repository context and previous conversation.
+- Never invent files, functions, APIs, classes or behaviour that are not present in the retrieved code.
+- If the available context is insufficient, clearly explain what information is missing instead of guessing.
+- Speak confidently when the retrieved code clearly answers the question.
+- Avoid phrases like "Based on the provided snippets..." unless information is genuinely incomplete.
+- If multiple files are involved, explain how they work together.
+- When appropriate, explain:
+  • Overall purpose
+  • Execution flow
+  • Important functions/classes
+  • Interactions between components
+  • Edge cases
+  • Design decisions
+
+Formatting:
+
+## Overview
+Give a short explanation.
+
+## Details
+Explain the implementation clearly.
+
+## Key Components
+• Component — purpose
+• Component — purpose
+
+## Sources
+Mention the relevant files naturally in your explanation.
+
+Keep the response concise but complete.
+
+Prioritize practical explanations over theoretical ones.
+
+If explaining a feature, describe:
+- what it does
+- how it works
+- which files participate
+- important execution flow
+- important design choices
+- possible limitations if visible
+
+Never fabricate implementation details.
+"""
 
     try:
         response = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             max_tokens=500,
-            messages=[{"role": "user", "content": prompt}]
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You are a senior software architect and staff-level software engineer."
+                        "You answer questions ONLY using the retrieved repository context."
+                        "Never invent files, functions, APIs, variables or behaviour."
+                        "If the repository context is insufficient, explicitly say what information is missing instead of guessing."
+                        "Always produce technically accurate, structured, concise explanations."
+                    )
+                },
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ]
         )
         answer = response.choices[0].message.content
     except Exception:
-        answer = f"[LLM unavailable — showing raw retrieved code]\n\n{combined_context[:800]}"
+        answer = (
+            "The AI model is currently unavailable.\n\n"
+            "Relevant code was successfully retrieved from the repository.\n"
+            "Review the snippet below while the AI service is unavailable:\n\n"
+            f"{combined_context[:1200]}"
+        )
 
     append_turn(project_id, question, answer)
 

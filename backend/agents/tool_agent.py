@@ -12,7 +12,7 @@ TOOLS = [
         "type": "function",
         "function": {
             "name": "search_codebase",
-            "description": "Semantic search across the whole indexed repository. Use this to find where something is implemented.",
+            "description": "Search the indexed repository for functions, classes, APIs, variables, routes, database models, UI components, configuration files, or implementation details relevant to the user's question.",
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -26,7 +26,7 @@ TOOLS = [
         "type": "function",
         "function": {
             "name": "read_file",
-            "description": "Read the full contents of a specific file by its exact path, to see code that wasn't captured by search.",
+            "description": "Read the complete source code of a specific file after locating it via search or when the exact file path is already known.",
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -40,7 +40,7 @@ TOOLS = [
         "type": "function",
         "function": {
             "name": "list_files",
-            "description": "List every file path in the indexed project -- useful to find the right file name before reading it.",
+            "description": "Return all indexed file paths. Use this only when the correct filename or location is unknown.",
             "parameters": {"type": "object", "properties": {}}
         }
     }
@@ -62,8 +62,8 @@ def _execute_tool(project_id, name, arguments):
         if not match:
             return json.dumps({"error": f"File '{file_path}' not found in project."})
         content = match["content"]
-        if len(content) > 4000:
-            content = content[:4000] + "\n... [truncated]"
+        if len(content) > 8000:
+            content = content[:8000] + "\n... [truncated]"
         return json.dumps({"path": file_path, "content": content})
 
     if name == "list_files":
@@ -81,10 +81,38 @@ def ask_with_tools(project_id, question, max_iterations=5):
         {
             "role": "system",
             "content": (
-                "You are a coding assistant with tools to search and read a specific "
-                "codebase. Use search_codebase to find relevant code, and read_file when "
-                "you need to see a file's full contents. Always cite file paths and line "
-                "numbers when you reference code in your final answer."
+                "You are an expert AI Software Engineer with access to tools for exploring a software repository.\n\n"
+
+                "# General Rules\n"
+                "- Always answer using information from the repository.\n"
+                "- Never invent files, functions, APIs, classes, or behavior.\n"
+                "- If the available context is insufficient, say so instead of guessing.\n"
+                "- Use repository evidence before relying on general programming knowledge.\n\n"
+
+                "# Tool Usage\n"
+                "- Use search_codebase first to locate relevant code.\n"
+                "- Use read_file only after search results or when an exact file path is provided.\n"
+                "- Use list_files if you cannot determine the correct file name.\n"
+                "- Minimize unnecessary tool calls.\n"
+                "- Never output function calls, XML tags, or JSON representing tool calls in your response.\n"
+                "- Invoke tools only through the provided tool interface.\n\n"
+
+                "# Answer Quality\n"
+                "- Explain your reasoning clearly and logically.\n"
+                "- Describe how different components work together.\n"
+                "- Mention important functions, classes, APIs, or modules involved.\n"
+                "- Highlight design decisions, dependencies, and possible edge cases when relevant.\n"
+                "- Keep explanations concise but technically complete.\n"
+                "- If multiple files contribute to the feature, explain their relationship.\n\n"
+
+                "# Evidence\n"
+                "- Cite file paths and line numbers whenever repository evidence is available.\n"
+                "- Do not cite files that were not retrieved.\n\n"
+
+                "# Restrictions\n"
+                "- Never hallucinate missing code.\n"
+                "- Never fabricate implementation details.\n"
+                "- If the repository does not contain the requested information, clearly state that instead of guessing."
             ),
         },
         {"role": "user", "content": question},

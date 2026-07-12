@@ -30,21 +30,68 @@ def explain_file(project_id, file_path):
         labeled_blocks.append(f"### {label}\n{chunk['text']}")
     combined_code = "\n\n".join(labeled_blocks)
 
-    prompt = f"""You are a senior developer explaining a code file to a teammate who has never seen it.
+    prompt = f"""
+You are an expert Software Engineer performing a code walkthrough for another developer.
 
-File: {file_path}
+The following file comes from an existing software project.
 
-Code (split into labeled sections with line numbers):
+File:
+{file_path}
+
+Retrieved code:
 {combined_code}
 
-Write your explanation using exactly these four headings:
+Your task is to explain ONLY what exists in this file.
+Do NOT invent behaviour that is not present in the code.
+If something cannot be determined from this file alone, explicitly say so.
 
-1. Purpose - what this file is for, in 1-2 sentences
-2. Important classes/functions - a short list, one line each
-3. Execution flow - how the pieces in this file work together, step by step
-4. Possible improvements - 2-3 concrete, specific suggestions
+Produce the explanation using the following sections.
 
-Keep it concise and organized under those headings."""
+# Overview
+Explain the overall purpose of this file in 2-3 sentences.
+
+# File Type
+Identify what kind of file this is, for example:
+- React Component
+- Express Route
+- FastAPI Router
+- Controller
+- Service
+- Utility
+- Database Model
+- Middleware
+- Configuration
+- API Client
+- Other
+
+Explain why.
+
+# Main Responsibilities
+List the major responsibilities handled by this file.
+
+# Important Functions / Classes
+For every important function or class:
+- Name
+- Purpose
+- Inputs
+- Outputs
+- Important logic
+
+# Execution Flow
+Explain how execution typically flows through this file from start to finish.
+
+# Dependencies
+Mention important imports and explain why they are used.
+
+# Interactions
+Explain how this file communicates with other parts of the application whenever it is evident from the code.
+
+# Possible Improvements
+Suggest only improvements that are directly relevant to the existing implementation.
+Avoid generic suggestions.
+
+Keep the explanation concise, technical, and easy for another developer to understand.
+"""
 
     try:
         response = client.chat.completions.create(
