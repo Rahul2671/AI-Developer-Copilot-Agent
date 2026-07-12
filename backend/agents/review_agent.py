@@ -7,6 +7,7 @@ client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 
 def review_file(project_id, file_path):
+    print("review_file() called")
     if not os.path.isabs(file_path):
         file_path = os.path.join(
             "data",
